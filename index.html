@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Word Counter</title>
     <style>
         body {
@@ -16,7 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column; /* Updated to stack footer below container */
+            flex-direction: column;
             overflow: hidden;
         }
         .container {
@@ -36,16 +37,16 @@
         }
         textarea {
             width: 94%;
-            height: 150px; /* Initial height */
+            height: 150px;
             border: none;
             border-radius: 10px;
             padding: 15px;
             font-size: 16px;
             box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-            resize: none; /* Disable manual resizing */
+            resize: none;
             outline: none;
-            overflow-y: auto; /* Enable vertical scrolling */
-            max-height: 300px; /* Set a max height */
+            overflow-y: auto;
+            max-height: 300px;
         }
         .button-container {
             display: flex;
@@ -63,6 +64,9 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
             flex: 1;
             margin: 0 5px;
+            display: flex;
+            align-items: center; /* Center icon and text vertically */
+            justify-content: center; /* Center icon and text horizontally */
         }
         button:hover {
             background-color: #0056b3;
@@ -76,7 +80,7 @@
             color: #555;
         }
         footer {
-            margin-top: 20px; /* Space between the container and footer */
+            margin-top: 20px;
             font-size: 14px;
             color: #666;
             text-align: center;
@@ -105,8 +109,12 @@
     <h1>Word Counter</h1>
     <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
     <div class="button-container">
-        <button id="clearButton" style="display:none;">Clear</button>
-        <button id="pasteButton">Paste</button>
+        <button id="clearButton" style="display:none;">
+            <i class="fas fa-trash"></i> Clear
+        </button>
+        <button id="pasteButton">
+            <i class="fas fa-paste"></i> Paste
+        </button>
     </div>
     <div class="highlight">
         <span id="lineCount">Lines: 0</span>
