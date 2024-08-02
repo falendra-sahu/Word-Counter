@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <title>Word Counter</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f4f4f9 50%, #d9e4fb 50%);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Updated to stack footer below container */
+            overflow: hidden;
+        }
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        textarea {
+            width: 94%;
+            height: 150px; /* Initial height */
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+            resize: none; /* Disable manual resizing */
+            outline: none;
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 300px; /* Set a max height */
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            flex: 1;
+            margin: 0 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        .highlight {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-weight: 500;
+            color: #555;
+        }
+        footer {
+            margin-top: 20px; /* Space between the container and footer */
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+            button {
+                padding: 10px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Word Counter</h1>
+    <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+    <div class="button-container">
+        <button id="clearButton" style="display:none;">Clear</button>
+        <button id="pasteButton">Paste</button>
+    </div>
+    <div class="highlight">
+        <span id="lineCount">Lines: 0</span>
+        <span id="wordCount">Words: 0</span>
+        <span id="charCount">Characters: 0</span>
+    </div>
+</div>
+
+<footer>
+    Powered by <a href="#">Falendra Sahu ❤️</a>
+</footer>
+
+<script>
+    const textInput = document.getElementById('textInput');
+    const clearButton = document.getElementById('clearButton');
+    const lineCount = document.getElementById('lineCount');
+    const wordCount = document.getElementById('wordCount');
+    const charCount = document.getElementById('charCount');
+
+    textInput.addEventListener('input', () => {
+        const text = textInput.value;
+        const lines = text.split('\n').filter(line => line.trim() !== '').length;
+        const words = text.trim() ? text.split(/\s+/).length : 0;
+        const chars = text.length;
+
+        lineCount.innerText = `Lines: ${lines}`;
+        wordCount.innerText = `Words: ${words}`;
+        charCount.innerText = `Characters: ${chars}`;
+        
+        clearButton.style.display = text ? 'inline-block' : 'none';
+    });
+
+    clearButton.addEventListener('click', () => {
+        textInput.value = '';
+        lineCount.innerText = 'Lines: 0';
+        wordCount.innerText = 'Words: 0';
+        charCount.innerText = 'Characters: 0';
+        clearButton.style.display = 'none';
+    });
+
+    document.getElementById('pasteButton').addEventListener('click', () => {
+        navigator.clipboard.readText().then(text => {
+            textInput.value += text;
+            textInput.dispatchEvent(new Event('input'));
+        });
+    });
+
+    // Prevent scrolling when focusing on the textarea
+    textInput.addEventListener('focus', () => {
+        document.body.style.overflow = 'hidden';
+    });
+
+    textInput.addEventListener('blur', () => {
+        document.body.style.overflow = 'auto';
+    });
+</script>
+
+</body>
+</html>
