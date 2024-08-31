@@ -2,175 +2,334 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>Word Counter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Word Counter</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f4f4f9 50%, #d9e4fb 50%);
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            overflow: hidden;
         }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
+
         .container {
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-sizing: border-box;
         }
+
         h1 {
             text-align: center;
-            font-size: 24px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 2.2rem;
+        }
+
+        .input-container {
             margin-bottom: 20px;
-            color: #333;
         }
+
         textarea {
-            width: 94%;
-            height: 150px;
-            border: none;
-            border-radius: 10px;
+            width: 100%;
+            height: 200px;
             padding: 15px;
-            font-size: 16px;
-            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-            resize: none;
-            outline: none;
-            overflow-y: auto;
-            max-height: 300px;
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 13px;
+            transition: border-color 0.3s;
         }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
         .button-container {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
         }
+
         button {
-            background-color: #007bff;
-            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+			font-weight: bold;
+            background-color: #A020F0;
+            color: #fff;
             border: none;
-            border-radius: 10px;
-            padding: 12px 18px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            flex: 1;
-            margin: 0 5px;
-            display: flex;
-            align-items: center; /* Center icon and text vertically */
-            justify-content: center; /* Center icon and text horizontally */
+            transition: background-color 0.3s, transform 0.1s;
         }
+
         button:hover {
-            background-color: #0056b3;
-            transform: translateY(-1px);
+            background-color: #2980b9;
         }
-        .highlight {
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+			border: 2px dotted #ddd;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item h3 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .stat-item p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #012842;
+        }
+
+        .expandable {
+            margin-top: 30px;
+            background-color: #d7d0f5;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .expandable-header {
+            padding: 15px;
+			font-size: 13px;
+            background-color: #e7e6ed;
+            color: #00000;
+			border: 2px dotted #ddd;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
-            font-weight: 500;
-            color: #555;
+            align-items: center;
+            transition: background-color 0.3s;
         }
-        footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-            text-align: center;
+
+        .expandable-header:hover {
+            background-color: #e7e6eb;
+			color: #012842;
         }
-        footer a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
         }
-        footer a:hover {
-            text-decoration: underline;
+
+        .expandable-content.expanded {
+            max-height: 500px;
         }
+
+        .expandable-content ul {
+            list-style-type: none;
+            padding: 15px;
+        }
+
+        .expandable-content li {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
         @media (max-width: 600px) {
-            h1 {
-                font-size: 20px;
+            .container {
+                padding: 20px;
             }
-            button {
-                padding: 10px 14px;
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Word Counter</h1>
-    <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
-    <div class="button-container">
-        <button id="clearButton" style="display:none;">
-            <i class="fas fa-trash"></i> Clear
-        </button>
-        <button id="pasteButton">
-            <i class="fas fa-paste"></i> Paste
-        </button>
+    <div class="container">
+        <h1>Word Counter</h1>
+        <div class="input-container">
+            <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+            <div class="button-container">
+                <button id="pasteButton">Paste</button>
+                <button id="clearButton">Clear</button>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <h3>Words</h3>
+                <p id="wordCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Characters</h3>
+                <p id="charCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Paragraphs</h3>
+                <p id="paragraphCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Sentences</h3>
+                <p id="sentenceCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Lines</h3>
+                <p id="lineCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Spaces</h3>
+                <p id="spaceCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Unique Words</h3>
+                <p id="uniqueWordCount">0</p>
+            </div>
+            <div class="stat-item">
+                <h3>Reading Time</h3>
+                <p id="readingTime">0 min</p>
+            </div>
+        </div>
+        <div class="expandable">
+            <div class="expandable-header" id="uniqueWordsHeader">
+                <h3>Unique Words</h3>
+                <span>▼</span>
+            </div>
+            <div class="expandable-content" id="uniqueWordsContent">
+                <ul id="uniqueWordsList"></ul>
+            </div>
+        </div>
+        <div class="expandable">
+            <div class="expandable-header" id="repeatedWordsHeader">
+                <h3>Most Repeated Words</h3>
+                <span>▼</span>
+            </div>
+            <div class="expandable-content" id="repeatedWordsContent">
+                <ul id="repeatedWordsList"></ul>
+            </div>
+        </div>
     </div>
-    <div class="highlight">
-        <span id="lineCount">Lines: 0</span>
-        <span id="wordCount">Words: 0</span>
-        <span id="charCount">Characters: 0</span>
-    </div>
-</div>
 
-<footer>
-    Powered by <a href="#">Falendra Sahu ❤️</a>
-</footer>
+    <script>
+        const textInput = document.getElementById('textInput');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+        const paragraphCount = document.getElementById('paragraphCount');
+        const sentenceCount = document.getElementById('sentenceCount');
+        const lineCount = document.getElementById('lineCount');
+        const spaceCount = document.getElementById('spaceCount');
+        const uniqueWordCount = document.getElementById('uniqueWordCount');
+        const readingTime = document.getElementById('readingTime');
+        const uniqueWordsList = document.getElementById('uniqueWordsList');
+        const repeatedWordsList = document.getElementById('repeatedWordsList');
+        const pasteButton = document.getElementById('pasteButton');
+        const clearButton = document.getElementById('clearButton');
+        const uniqueWordsHeader = document.getElementById('uniqueWordsHeader');
+        const uniqueWordsContent = document.getElementById('uniqueWordsContent');
+        const repeatedWordsHeader = document.getElementById('repeatedWordsHeader');
+        const repeatedWordsContent = document.getElementById('repeatedWordsContent');
 
-<script>
-    const textInput = document.getElementById('textInput');
-    const clearButton = document.getElementById('clearButton');
-    const lineCount = document.getElementById('lineCount');
-    const wordCount = document.getElementById('wordCount');
-    const charCount = document.getElementById('charCount');
+        textInput.addEventListener('input', updateStats);
+        pasteButton.addEventListener('click', pasteText);
+        clearButton.addEventListener('click', clearText);
+        uniqueWordsHeader.addEventListener('click', () => toggleExpand(uniqueWordsContent));
+        repeatedWordsHeader.addEventListener('click', () => toggleExpand(repeatedWordsContent));
 
-    textInput.addEventListener('input', () => {
-        const text = textInput.value;
-        const lines = text.split('\n').filter(line => line.trim() !== '').length;
-        const words = text.trim() ? text.split(/\s+/).length : 0;
-        const chars = text.length;
+        function updateStats() {
+            const text = textInput.value;
+            const words = text.trim().split(/\s+/);
+            const uniqueWords = new Set(words.map(word => word.toLowerCase()));
 
-        lineCount.innerText = `Lines: ${lines}`;
-        wordCount.innerText = `Words: ${words}`;
-        charCount.innerText = `Characters: ${chars}`;
-        
-        clearButton.style.display = text ? 'inline-block' : 'none';
-    });
+            wordCount.textContent = words.length;
+            charCount.textContent = text.length;
+            paragraphCount.textContent = text.split(/\n\s*\n/).length;
+            sentenceCount.textContent = text.split(/[.!?]+\s/).length - 1;
+            lineCount.textContent = text.split('\n').length;
+            spaceCount.textContent = text.split(' ').length - 1;
+            uniqueWordCount.textContent = uniqueWords.size;
 
-    clearButton.addEventListener('click', () => {
-        textInput.value = '';
-        lineCount.innerText = 'Lines: 0';
-        wordCount.innerText = 'Words: 0';
-        charCount.innerText = 'Characters: 0';
-        clearButton.style.display = 'none';
-    });
+            const wpm = 200;
+            const readingTimeMinutes = Math.ceil(words.length / wpm);
+            readingTime.textContent = `${readingTimeMinutes} min`;
 
-    document.getElementById('pasteButton').addEventListener('click', () => {
-        navigator.clipboard.readText().then(text => {
-            textInput.value += text;
-            textInput.dispatchEvent(new Event('input'));
-        });
-    });
+            updateUniqueWords(uniqueWords);
+            updateMostRepeatedWords(words);
+        }
 
-    // Prevent scrolling when focusing on the textarea
-    textInput.addEventListener('focus', () => {
-        document.body.style.overflow = 'hidden';
-    });
+        function updateUniqueWords(uniqueWords) {
+            uniqueWordsList.innerHTML = '';
+            uniqueWords.forEach(word => {
+                const li = document.createElement('li');
+                li.textContent = word;
+                uniqueWordsList.appendChild(li);
+            });
+        }
 
-    textInput.addEventListener('blur', () => {
-        document.body.style.overflow = 'auto';
-    });
-</script>
+        function updateMostRepeatedWords(words) {
+            const wordFrequency = {};
+            words.forEach(word => {
+                const lowercaseWord = word.toLowerCase();
+                wordFrequency[lowercaseWord] = (wordFrequency[lowercaseWord] || 0) + 1;
+            });
 
+            const sortedWords = Object.entries(wordFrequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            repeatedWordsList.innerHTML = '';
+            sortedWords.forEach(([word, frequency]) => {
+                const li = document.createElement('li');
+                li.textContent = `${word}: ${frequency}`;
+                repeatedWordsList.appendChild(li);
+            });
+        }
+
+        async function pasteText() {
+            try {
+                const text = await navigator.clipboard.readText();
+                textInput.value = text;
+                updateStats();
+            } catch (err) {
+                console.error('Failed to read clipboard contents: ', err);
+            }
+        }
+
+        function clearText() {
+            textInput.value = '';
+            updateStats();
+        }
+
+        function toggleExpand(content) {
+            content.classList.toggle('expanded');
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('span');
+            arrow.textContent = content.classList.contains('expanded') ? '▲' : '▼';
+        }
+    </script>
 </body>
 </html>
